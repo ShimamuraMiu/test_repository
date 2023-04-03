@@ -1,3 +1,7 @@
+#############################
+# Create Read Update Delete #
+#############################
+
 from sqlalchemy.orm import Session
 
 import models
@@ -29,7 +33,7 @@ async def create_todo(db: Session, todo: schemas.TodoCreate):
     return todo_obj
 
 
-# PUT
+# UPDATE
 async def update_todo(db: Session, id: str, data: dict):
     todo_obj = await get_todo(db, id)
     if todo_obj is not None:
@@ -38,6 +42,17 @@ async def update_todo(db: Session, id: str, data: dict):
         db.commit()
         db.refresh(todo_obj)
         return todo_obj
+
+
+# DELETE
+async def delete_todo(db: Session, id: int) -> bool:
+    todo_obj = await get_todo(db, id)
+    if todo_obj is not None:
+        db.delete(todo_obj)
+        db.commit()
+        return True
+    else:
+        return False
 
 
 '''
