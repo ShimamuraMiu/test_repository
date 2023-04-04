@@ -10,7 +10,7 @@ from database import SessionLocal
 import schemas                                        # schemasファイルからインポート
 import crud                                           # crudファイルをインポート
 from starlette.status import HTTP_201_CREATED         # ステータス上書き用
-# from fastapi.encoders import jsonable_encoder       # jsonからdictに変換
+from fastapi.encoders import jsonable_encoder       # jsonからdictに変換
 
 router = APIRouter()  # インスタンス化
 
@@ -36,17 +36,26 @@ async def create_todo(request: Request, response: Response,
 
 
 @router.get("/api/todo/", response_model=list[schemas.Todo])
-def read_todos(offset: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    todos = crud.get_todos(db, offset=offset, limit=limit)
-    return todos
+async def get_todos(offset: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    res = await crud.get_todos(db, offset=offset, limit=limit)
+    return res
 
 
 @router.get("/api/todo/{todo_id}", response_model=schemas.Todo)
-def read_todo(todo_id: int, db: Session = Depends(get_db)):
-    db_todo = crud.get_todo(db, todo_id=todo_id)
-    if db_todo is None:
-        raise HTTPException(status_code=404, detail="Todo not found")
-    return db_todo
+async def get_single_todo(todo_id: int, db: Session = Depends(get_db)):
+    res = await crud.get_todo(db, todo_id=todo_id)
+    if res:
+        return res
+    raise HTTPException(status_code=404, detail=f"Task of ID: {todo_id} doesn't exist")
+
+
+@router.put("/api/todo/{todo_id}", response_model=schemas.Todo)
+async def update_todo(todo_id: int, data: schemas.TodoBody, db: Session = Depends(get_db)):
+    todo = jsonable_encoder(data)
+    res = await crud.update_todo(db=db, id=todo_id, data=todo)
+    if res is None:
+        raise HTTPException(status_code=404, detail="Update task failed")
+    return res
 
 
 '''

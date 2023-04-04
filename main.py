@@ -8,7 +8,6 @@ import schemas
 from database import engine
 from routers import route_todo
 
-# これは何をしている？
 models.Base.metadata.create_all(bind=engine)
 
 # インスタンスを生成

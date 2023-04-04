@@ -4,15 +4,17 @@ import models
 import schemas
 
 
-# SELECT（データ1つ）
-def get_todo(db: Session, todo_id: int):
-    return db.query(models.Todo).filter(models.Todo.id == todo_id).first()
-
-
 # SELECT ALL
-def get_todos(db: Session, offset: 0, limit: 100):
+# -> list ?
+async def get_todos(db: Session, offset: 0, limit: 100):
     # offset：どこから、limit：どこまで
     return db.query(models.Todo).offset(offset).limit(limit).all()
+
+
+# SELECT（データ1つ）
+# -> Union[dict, bool] ?
+async def get_todo(db: Session, todo_id: int):
+    return db.query(models.Todo).filter(models.Todo.id == todo_id).first()
 
 
 # INSERT
@@ -27,10 +29,21 @@ async def create_todo(db: Session, todo: schemas.TodoCreate):
     return todo_obj
 
 
+# PUT
+async def update_todo(db: Session, id: str, data: dict):
+    todo_obj = await get_todo(db, id)
+    if todo_obj is not None:
+        todo_obj.title = data["title"]
+        todo_obj.description = data["description"]
+        db.commit()
+        db.refresh(todo_obj)
+        return todo_obj
+
+
 '''
 # MongoDB
 
-# DBから取得した物を辞書型に変換して返す関数 ###
+# DBから取得した物を辞書型に変換して返す関数
 def todo_serializer(todo) -> dict:
     return {
         "id": str(todo["_id"]),
