@@ -50,7 +50,7 @@ async def get_single_todo(todo_id: int, db: Session = Depends(get_db)):
     res = await crud.get_todo(db, todo_id=todo_id)
     if res:
         return res
-    raise HTTPException(status_code=404, detail=f"Task of ID: {id} doesn't exist")
+    raise HTTPException(status_code=404, detail=f"Task of ID: {todo_id} doesn't exist")
 
 
 # UPDATE
