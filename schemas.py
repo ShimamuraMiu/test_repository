@@ -3,7 +3,15 @@
 ########################################
 
 from pydantic import BaseModel  # FastAPIのモデル
-# from typing import List, Optional
+from typing import Optional
+from decouple import config
+
+CSRF_KEY = config('CSRF_KEY')
+
+
+# CSRF用
+class CsrfSettings(BaseModel):
+    secret_key: str = CSRF_KEY
 
 
 # route用
@@ -11,6 +19,11 @@ from pydantic import BaseModel  # FastAPIのモデル
 class TodoBase(BaseModel):
     title: str
     description: str
+
+
+class UserBase(BaseModel):
+    email: str
+    password: str
 
 
 '''
@@ -31,12 +44,34 @@ class Todo(TodoBase):
         orm_mode = True
 
 
+class UserCreate(UserBase):
+    pass
+
+
 # ユーザーがjson型で渡してくる用
 class TodoBody(BaseModel):
     title: str
     description: str
 
 
+class UserBody(BaseModel):
+    email: str
+    password: str
+
+
+class UserInfo(BaseModel):
+    id: Optional[int] = None
+    email: str
+
+    class Config:
+        orm_mode = True
+
+
 # mainのget用
 class SuccessMsg(BaseModel):
     message: str
+
+
+# csrf用
+class Csrf(BaseModel):
+    csrg_token: str
