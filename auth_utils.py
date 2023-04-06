@@ -50,26 +50,3 @@ class AuthJwtCsrf():
 
         except jwt.InvalidTokenError:  # JWTのフォーマットじゃないとか空とかの場合
             raise HTTPException(status_code=401, detail='JWT is not valid')
-
-    # JWT tokenを検証
-    def verify_jwt(self, request) -> str:
-        token = request.cookies.get("access_token")
-        if not token:
-            raise HTTPException(status_code=401, detail='No JWT exist: may not set yet or deleted')
-        _, _, value = token.partition(" ")
-        subject = self.decode_jwt(value)
-        return subject
-
-    # JWTの検証・更新
-    def verify_update_jwt(self, request) -> tuple[str, str]:
-        subject = self.verify_jwt(request)    # JWTが有効かどうかを判定（今回の場合はemailが返ってくる）
-        new_token = self.encode_jwt(subject)  # 新しくJWTを発行
-        return new_token, subject
-
-    # GSRFの検証&JWTの検証・更新
-    def verify_csrf_update_jwt(self, request, csrf_protect, headers) -> str:
-        csrf_token = csrf_protect.get_csrf_from_headers(headers)
-        csrf_protect.validate_csrf(csrf_token)
-        subject = self.verify_jwt(request)
-        new_token = self.encode_jwt(subject)
-        return new_token

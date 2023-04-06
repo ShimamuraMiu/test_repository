@@ -33,18 +33,3 @@ result = conn.execute(text("select 'hello world'"))
 print(result.all())
 conn.close()
 '''
-
-
-'''
-# MongoDB
-
-MONGO_API_KEY = config('MONGO_API_KEY')
-
-# MongoDBにkeyを渡す
-client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_API_KEY)
-
-# DB名を指定（「API_DB」はDB名）
-database = client.API_DB
-collection_todo = database.todo
-collection_user = database.user
-'''
