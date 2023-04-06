@@ -4,6 +4,14 @@
 
 from pydantic import BaseModel  # FastAPIのモデル
 from typing import Optional
+from decouple import config
+
+CSRF_KEY = config('CSRF_KEY')
+
+
+# SCRF用
+class CsrfSettings(BaseModel):
+    secret_key: str = CSRF_KEY
 
 
 # route用
@@ -57,6 +65,10 @@ class UserInfo(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class Csrf(BaseModel):
+    csrf_token: str
 
 
 # mainのget用
