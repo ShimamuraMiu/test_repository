@@ -12,7 +12,6 @@ function App() {
         `${process.env.REACT_APP_API_URL}/csrftoken`
       )
       axios.defaults.headers.common['X-CSRF-Token'] = res.data.csrf_token
-      // console.log(res.data.csrf_token)
     }
     getCsrfToken()
   }, [csrf])
