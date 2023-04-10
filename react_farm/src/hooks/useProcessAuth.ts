@@ -39,25 +39,24 @@ export const useProcessAuth = () => {
        * 登録できるかどうかを待つ必要があるためawaitを使用する（処理を同期化）
        * awaitが《成功：then / 失敗：catch》の処理が走る
        */
-      await registerMutation
-        .mutateAsync({
+      await registerMutation.mutateAsync({
+        email: email,
+        password: pw,
+      })
+      // 成功した場合
+      .then(() =>
+        // 登録に続けてログインする
+        loginMutation.mutate({
           email: email,
           password: pw,
         })
-        // 成功した場合
-        .then(() =>
-          // 登録に続けてログインする
-          loginMutation.mutate({
-            email: email,
-            password: pw,
-          })
-        )
-        // 失敗した場合
-        .catch(() => {
-          // EmailとPasswordのstateを初期化
-          setPw('')
-          setEmail('')
-        })
+      )
+      // 失敗した場合
+      .catch(() => {
+        // EmailとPasswordのstateを初期化
+        setPw('')
+        setEmail('')
+      })
     }
   }
 

@@ -22,20 +22,20 @@ export const useMutateAuth = () => {
         // cookie付きの通信を有効
         withCredentials: true,
       }),
-      {
-        // 通信の処理が成功
-        onSuccess: () => {
-            // todoのコンポーネントに飛ぶ
-            history.push('/todo')
-        },
-        // 通信の処理が失敗
-        onError: (err: any) => {
-            alert(`${err.response.data.detail}\n${err.message}`)
-            if (err.response.data.detail === 'The CSRF token has expired.') {
-              dispatch(toggleCsrfState())
-            }
-        },
-      }
+    {
+      // 通信の処理が成功
+      onSuccess: () => {
+        // todoのコンポーネントに飛ぶ
+        history.push('/todo')
+      },
+      // 通信の処理が失敗
+      onError: (err: any) => {
+        alert(`${err.response.data.detail}\n${err.message}`)
+        if (err.response.data.detail === 'The CSRF token has expired.') {
+          dispatch(toggleCsrfState())
+        }
+      },
+    }
   )
 
   // register処理
@@ -65,26 +65,26 @@ export const useMutateAuth = () => {
         {},  // 渡すデータは無し                
         {withCredentials: true, }  // cookie付きの通信を有効
       ),
-      {
-        // 通信の処理が成功
-        onSuccess: () => {
+    {
+      // 通信の処理が成功
+      onSuccess: () => {
+      // todoからAuthへ遷移して、ログインを再度促す
+        history.push('/')
+      },
+      // 通信の処理が失敗
+      onError: (err: any) => {
+        alert(`${err.response.data.detail}\n${err.message}`)
+        // CSRF tokenが失効している場合
+        if (err.response.data.detail === 'The CSRF token has expired.') {
+          // CSRF tokenを再度取得
+          dispatch(toggleCsrfState())
+          // ユーザーが入力中のタスクをリセット
+          dispatch(resetEditedTask())
           // todoからAuthへ遷移して、ログインを再度促す
           history.push('/')
-        },
-        // 通信の処理が失敗
-        onError: (err: any) => {
-          alert(`${err.response.data.detail}\n${err.message}`)
-          // CSRF tokenが失効している場合
-          if (err.response.data.detail === 'The CSRF token has expired.') {
-            // CSRF tokenを再度取得
-            dispatch(toggleCsrfState())
-            // ユーザーが入力中のタスクをリセット
-            dispatch(resetEditedTask())
-            // todoからAuthへ遷移して、ログインを再度促す
-            history.push('/')
-          }
-        },
-      }
+        }
+      },
+    }
   )
 
   // 上記の関数を返してReactのコンポーネントから使用できるようにする
