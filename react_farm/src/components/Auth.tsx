@@ -1,9 +1,8 @@
-import { VFC } from 'react'
 import { RefreshIcon } from '@heroicons/react/solid'
 import { BadgeCheckIcon } from '@heroicons/react/solid'
 import { useProcessAuth } from '../hooks/useProcessAuth'
 
-export const Auth: VFC = () => {
+export const Auth = () => {
   // state & 必要な関数を読み込む
   const {
     pw,

@@ -1,8 +1,7 @@
-import {VFC} from 'react'
 import { LogoutIcon } from '@heroicons/react/outline'
 import { useProcessAuth } from '../hooks/useProcessAuth'
 
-export const Todo: VFC  = () => {
+export const Todo = () => {
   const { logout } = useProcessAuth()
 
   return (
