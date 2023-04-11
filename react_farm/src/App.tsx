@@ -22,11 +22,11 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
-        /* rootのパス */
+        {/* rootのパス */}
         <Route exact path="/">
           <Auth />
         </Route>
-        /* todoのパス */
+        {/* todoのパス */}
         <Route exact path="/todo">
           <Todo />
         </Route>
