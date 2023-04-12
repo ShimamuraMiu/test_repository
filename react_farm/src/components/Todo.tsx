@@ -1,8 +1,14 @@
 import { LogoutIcon } from '@heroicons/react/outline'
 import { useProcessAuth } from '../hooks/useProcessAuth'
+import { useQueryTasks } from '../hooks/useQueryTasks'
+import { useQueryUser } from '../hooks/useQueryUser'
 
 export const Todo = () => {
   const { logout } = useProcessAuth()
+
+  // useQueryのカスタムフックを実行
+  const { data: dataUser } = useQueryUser()
+  const { data: dataTasks, isLoading: isLoadingTasks } = useQueryTasks()
 
   return (
     // 中央寄せ、フォント等の指定

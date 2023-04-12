@@ -44,7 +44,7 @@ async def create_todo(request: Request, response: Response, todo: schemas.TodoCr
 
 
 # SELECT ALL
-@router.get("/api/todo/", response_model=list[schemas.Todo])
+@router.get("/api/todo", response_model=list[schemas.Todo])
 async def get_todos(request: Request, offset: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     auth.verify_jwt(request)
     res = await crud.get_todos(db, offset=offset, limit=limit)
