@@ -2,6 +2,7 @@
 // Todo（全体？）のコンポーネント
 //////////////////////////////////
 
+import { useState } from 'react'
 import { LogoutIcon } from '@heroicons/react/outline'
 import { ShieldCheckIcon } from '@heroicons/react/solid'
 import { useAppSelector, useAppDispatch } from '../app/hooks'
@@ -10,14 +11,19 @@ import { useProcessAuth } from '../hooks/useProcessAuth'
 import { useProcessTask } from '../hooks/useProcessTask'
 import { useQueryTasks } from '../hooks/useQueryTasks'
 import { useQueryUser } from '../hooks/useQueryUser'
+import { useQuerySingleTask } from '../hooks/useQuerySingleTask'
 import { TaskItem } from './TaskItem'
 
 export const Todo = () => {
+  // ユーザーが選択したタスクのIDを保持
+  const [id, setId] = useState('')
+
   const { logout } = useProcessAuth()
 
   // useQueryのカスタムフックを実行
   const { data: dataUser } = useQueryUser()
   const { data: dataTasks, isLoading: isLoadingTasks } = useQueryTasks()
+  const { data: dataSingleTask, isLoading: isLoadingTask } = useQuerySingleTask(id)
 
   // dispathを使えるようにする
   const dispatch = useAppDispatch()
@@ -102,10 +108,23 @@ export const Todo = () => {
               id={task.id}
               title={task.title}
               description={task.description}
+              setId={setId}  // ユーザーが選択したタスクのID
             />
           ))}
         </ul>
       )}
+
+
+      {/* 以下タスク詳細部分 */}
+      {/* タスク詳細部分タイトル*/}
+      <h2 className="mt-3 font-bold">Selected Task</h2>
+
+      {/* 取得中の場合は「Loading...」を出す */}
+      {isLoadingTask && <p>Loading...</p>}
+      
+      {/* タスクが存在する場合は表示 */}
+      <p className="my-1 text-blue-500 text-sm">{dataSingleTask?.title}</p>
+      <p className="text-blue-500 text-sm">{dataSingleTask?.description}</p>
     </div>
   )
 }
