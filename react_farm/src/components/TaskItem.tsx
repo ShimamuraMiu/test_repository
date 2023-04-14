@@ -9,7 +9,10 @@ import { useAppDispatch } from '../app/hooks'
 import { setEditedTask } from '../slices/appSlice'
 import { useMutateTask } from '../hooks/useMutateTask'
 
-const TaskItemMemo: FC<Task> = ({ id, title, description }) => {
+const TaskItemMemo: FC<
+  // &(Intersection):型（属性）を結合。setIdはあらかじめ用意された型を使用
+  Task & { setId: React.Dispatch<React.SetStateAction<string>> }
+> = ({ id, title, description, setId }) => {
   // dispathを使えるようにする
   const dispatch = useAppDispatch()
   
@@ -17,8 +20,8 @@ const TaskItemMemo: FC<Task> = ({ id, title, description }) => {
 
   return (
     <li>
-      {/* タイトル */}
-      <span className="font-bold cursor-pointer">
+      {/* タスクのタイトル（onClickで、クリック時にタイトルのidを更新） */}
+      <span className="font-bold cursor-pointer" onClick={() => setId(id)}>
         {title}
       </span>
 
